@@ -25,27 +25,15 @@ nfeatures=4900
 ##
 
 ## Read Data
-file=h5py.File('cavity_2d.mat', 'r')
-input_data=(np.array(file['U']))
+file=h5py.File('encoded_u.mat', 'r')
+input_data=(np.array(file['encoded']))
 data=(input_data)
 M=np.mean(data.flatten())
 sdev=np.std(data.flatten())
 data=(data-M)/sdev
 train = data[0:res_params['train_length'],:]
-test = data[res_params['train_length']:res_params['train_length']+res_params['predict_length'],:]
-print('np.shape(train)', np.shape(train))
-print('np.shape(test)', np.shape(test))
-
-##
-trainN=80000
-testN=2000
-##
-
 
 print('np.shape(train)', np.shape(train))
-print('np.shape(test)', np.shape(test))
-
-
 
 
 
@@ -82,24 +70,12 @@ decoder= Model(encoded_input, deco)
 
 # retrieve the last layer of the autoencoder model
 autoencoder.compile(optimizer='adadelta', loss='mse')
+autoencoder.save_weights("./weights_U")
 
-autoencoder.load_weights('./weights_U', by_name=False)
+ydecoded=decoder.predict(train)
+
+print('shape of decoded',np.shape(ydecoded))
 
 
-#autoencoder.fit(train, train,
-#                epochs=10,
-#                batch_size=100,
-#                shuffle=True,
-#                validation_data=(test, test))
+sio.savemat('timevolution_u.mat', {'ydecoded_time':ydecoded})
 
-#autoencoder.save_weights("./weights_U")
-
-#ypred=autoencoder.predict(test)
-#sio.savemat('prediction_u.mat', {'ypred':ypred,'truth':test})
-
-#yencoded=encoder.predict(test)
-#print('shape of encoded',np.shape(yencoded))
-
-#ydecoded=decoder.predict(yencoded)
-
-#print('shape of decoded',np.shape(ydecoded))
