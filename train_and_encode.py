@@ -83,22 +83,23 @@ decoder= Model(encoded_input, deco)
 # retrieve the last layer of the autoencoder model
 autoencoder.compile(optimizer='adadelta', loss='mse')
 
-autoencoder.load_weights('./weights_U', by_name=False)
+autoencoder.save_weights('./weights_U')
 
 
-#autoencoder.fit(train, train,
-#                epochs=10,
-#                batch_size=100,
-#                shuffle=True,
-#                validation_data=(test, test))
+autoencoder.fit(train, train,
+                epochs=10,
+                batch_size=100,
+                shuffle=True,
+                validation_data=(test, test))
 
-#autoencoder.save_weights("./weights_U")
+autoencoder.save_weights("./weights_U")
 
-#ypred=autoencoder.predict(test)
-#sio.savemat('prediction_u.mat', {'ypred':ypred,'truth':test})
+ypred=autoencoder.predict(test)
+sio.savemat('reconstruct_u.mat', {'ypred':ypred,'truth':test})
 
-#yencoded=encoder.predict(test)
-#print('shape of encoded',np.shape(yencoded))
+yencoded=encoder.predict(train)
+print('shape of encoded',np.shape(yencoded))
+sio.savemat('encoded_u.mat', {'encoding':yencoded})
 
 #ydecoded=decoder.predict(yencoded)
 
