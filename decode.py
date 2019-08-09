@@ -70,7 +70,7 @@ decoder= Model(encoded_input, deco)
 
 # retrieve the last layer of the autoencoder model
 autoencoder.compile(optimizer='adadelta', loss='mse')
-autoencoder.save_weights("./weights_U")
+autoencoder.load_weights("./weights_U")
 
 ydecoded=decoder.predict(train)
 
